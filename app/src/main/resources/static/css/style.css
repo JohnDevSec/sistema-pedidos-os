@@ -80,3 +80,13 @@ td a { color: var(--accent); text-decoration: none; }
 .actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 6px; }
 .erro-campo { display: block; color: var(--danger); font-size: 12px; margin: -8px 0 12px; }
 .vazio { color: var(--muted); }
+select {
+  width: 100%; padding: 10px 12px; margin-bottom: 14px;
+  background: rgba(22, 25, 29, 0.9); border: 1px solid var(--border); border-radius: 10px;
+  color: var(--text); font: inherit;
+}
+select:focus { outline: none; border-color: var(--accent); }
+.check { display: flex; gap: 8px; align-items: center; margin-bottom: 14px; }
+.check input { width: auto; margin: 0; }
+.check label { margin: 0; font-size: 14px; color: var(--text); }
+.dica { font-size: 12px; color: var(--muted); margin: -8px 0 14px; }
