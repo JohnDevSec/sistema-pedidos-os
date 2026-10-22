@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Clientes</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+  <header th:replace="~{fragments/topbar :: topbar}"></header>
+  <main class="glass content">
+    <h1>Clientes</h1>
+    <p class="msg info" th:if="${sucesso}" th:text="${sucesso}"></p>
+    <div class="toolbar">
+      <form class="busca" method="get" th:action="@{/clientes}">
+        <input type="text" name="busca" th:value="${busca}" placeholder="Buscar por nome">
+        <button type="submit">Buscar</button>
+      </form>
+      <a class="btn" th:href="@{/clientes/novo}">Novo cliente</a>
+    </div>
+    <p class="vazio" th:if="${!pagina.hasContent()}">Nenhum cliente encontrado.</p>
+    <div class="tabela-scroll" th:if="${pagina.hasContent()}">
+      <table>
+        <thead>
+          <tr><th>Nome</th><th>Documento</th><th>E-mail</th><th>Telefone</th><th></th></tr>
+        </thead>
+        <tbody>
+          <tr th:each="c : ${pagina.content}">
+            <td th:text="${c.nome}"></td>
+            <td th:text="${c.documento}"></td>
+            <td th:text="${c.email}"></td>
+            <td th:text="${c.telefone}"></td>
+            <td><a th:href="@{/clientes/{id}/editar(id=${c.id})}">Editar</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="paginacao">
+      <a th:if="${pagina.hasPrevious()}" th:href="@{/clientes(busca=${busca},pagina=${pagina.number - 1})}">Anterior</a>
+      <span>Página <span th:text="${pagina.number + 1}">1</span> de <span th:text="${pagina.totalPages == 0 ? 1 : pagina.totalPages}">1</span></span>
+      <a th:if="${pagina.hasNext()}" th:href="@{/clientes(busca=${busca},pagina=${pagina.number + 1})}">Próxima</a>
+    </div>
+  </main>
+</body>
+</html>

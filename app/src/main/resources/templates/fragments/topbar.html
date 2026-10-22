@@ -1,0 +1,11 @@
+<header class="glass topbar" th:fragment="topbar" xmlns:th="http://www.thymeleaf.org">
+  <strong>Pedidos e OS</strong>
+  <nav>
+    <a th:href="@{/}">Início</a>
+    <a th:href="@{/clientes}">Clientes</a>
+  </nav>
+  <span th:text="${emailLogado}">usuario</span>
+  <form th:action="@{/logout}" method="post">
+    <button type="submit">Sair</button>
+  </form>
+</header>

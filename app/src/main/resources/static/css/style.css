@@ -54,3 +54,29 @@ button:hover { background: rgba(122, 167, 209, 0.28); }
 .topbar span { color: var(--muted); font-size: 13px; }
 .topbar button { width: auto; }
 .content { margin: 16px; padding: 24px; }
+.topbar strong { margin-right: 12px; }
+.topbar nav { display: flex; gap: 14px; margin-right: auto; }
+.topbar nav a { color: var(--muted); text-decoration: none; font-size: 14px; }
+.topbar nav a:hover { color: var(--text); }
+.toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
+.busca { display: flex; gap: 8px; flex: 1; min-width: 220px; }
+.busca input { margin: 0; }
+.busca button, .actions button { width: auto; }
+.btn {
+  display: inline-block; padding: 10px 14px; border-radius: 10px; white-space: nowrap;
+  border: 1px solid var(--accent); background: rgba(122, 167, 209, 0.18);
+  color: var(--text); text-decoration: none;
+}
+.btn:hover { background: rgba(122, 167, 209, 0.28); }
+.btn-sec { background: transparent; border-color: var(--border); }
+.tabela-scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: left; font-weight: 500; color: var(--muted); padding: 8px 6px; border-bottom: 1px solid var(--border); }
+td { padding: 10px 6px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+td a { color: var(--accent); text-decoration: none; }
+.paginacao { display: flex; gap: 14px; justify-content: flex-end; align-items: center; margin-top: 14px; font-size: 13px; color: var(--muted); }
+.paginacao a { color: var(--accent); text-decoration: none; }
+.form-card { max-width: 480px; }
+.actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 6px; }
+.erro-campo { display: block; color: var(--danger); font-size: 12px; margin: -8px 0 12px; }
+.vazio { color: var(--muted); }

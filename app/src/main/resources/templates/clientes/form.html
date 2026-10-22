@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${titulo}">Cliente</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+  <header th:replace="~{fragments/topbar :: topbar}"></header>
+  <main class="glass content form-card">
+    <h1 th:text="${titulo}">Cliente</h1>
+    <form th:action="@{${acao}}" th:object="${cliente}" method="post">
+      <label for="nome">Nome</label>
+      <input type="text" th:field="*{nome}" maxlength="120">
+      <small class="erro-campo" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></small>
+
+      <label for="documento">Documento (CPF ou CNPJ)</label>
+      <input type="text" th:field="*{documento}" maxlength="18">
+      <small class="erro-campo" th:if="${#fields.hasErrors('documento')}" th:errors="*{documento}"></small>
+
+      <label for="email">E-mail</label>
+      <input type="text" th:field="*{email}" maxlength="160">
+      <small class="erro-campo" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+
+      <label for="telefone">Telefone</label>
+      <input type="text" th:field="*{telefone}" maxlength="20">
+      <small class="erro-campo" th:if="${#fields.hasErrors('telefone')}" th:errors="*{telefone}"></small>
+
+      <div class="actions">
+        <a class="btn btn-sec" th:href="@{/clientes}">Cancelar</a>
+        <button type="submit">Salvar</button>
+      </div>
+    </form>
+  </main>
+</body>
+</html>

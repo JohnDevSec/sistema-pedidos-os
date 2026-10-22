@@ -7,16 +7,10 @@
   <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-  <header class="glass topbar">
-    <strong>Pedidos e OS</strong>
-    <span th:text="${email}">usuario</span>
-    <form th:action="@{/logout}" method="post">
-      <button type="submit">Sair</button>
-    </form>
-  </header>
+  <header th:replace="~{fragments/topbar :: topbar}"></header>
   <main class="glass content">
     <h1>Início</h1>
-    <p>Login funcionando.</p>
+    <p>Escolha uma opção no menu.</p>
   </main>
 </body>
 </html>
