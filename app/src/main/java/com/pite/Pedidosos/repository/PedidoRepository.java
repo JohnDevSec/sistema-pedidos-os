@@ -16,6 +16,12 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     @EntityGraph(attributePaths = {"cliente", "vendedor"})
     Page<Pedido> findByStatus(StatusPedido status, Pageable pageable);
 
+    @EntityGraph(attributePaths = {"cliente", "vendedor"})
+    Page<Pedido> findByVendedorEmailIgnoreCase(String email, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"cliente", "vendedor"})
+    Page<Pedido> findByStatusAndVendedorEmailIgnoreCase(StatusPedido status, String email, Pageable pageable);
+
     @EntityGraph(attributePaths = {"cliente", "vendedor", "itens"})
     Optional<Pedido> findWithItensById(Long id);
 }

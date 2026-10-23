@@ -2,6 +2,8 @@ package com.pite.Pedidosos.service;
 
 import com.pite.Pedidosos.model.*;
 import com.pite.Pedidosos.repository.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -107,6 +109,23 @@ public class PedidoService {
         }
         mudarStatus(pedido, StatusPedido.CANCELADO, usuario);
         return pedido;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Pedido> listar(StatusPedido status, String emailVendedor, Pageable pageable) {
+        if (emailVendedor == null) {
+            return status == null ? pedidos.findAll(pageable) : pedidos.findByStatus(status, pageable);
+        }
+        return status == null
+                ? pedidos.findByVendedorEmailIgnoreCase(emailVendedor, pageable)
+                : pedidos.findByStatusAndVendedorEmailIgnoreCase(status, emailVendedor, pageable);
+    }
+
+    @Transactional
+    public Pedido criarComoVendedor(String emailVendedor, Long clienteId, String observacao, List<ItemPedido> itens) {
+        Usuario vendedor = usuarios.findByEmailIgnoreCase(emailVendedor)
+                .orElseThrow(() -> new RegraDeNegocioException("Usuário não encontrado."));
+        return criar(clienteId, vendedor.getId(), observacao, itens);
     }
 
     private void exigirItens(List<ItemPedido> itens) {

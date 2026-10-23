@@ -2,6 +2,7 @@ package com.pite.Pedidosos.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +22,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/login", "/css/**", "/js/**").permitAll()
                 .requestMatchers("/usuarios/**").hasRole("ADMIN")
+                .requestMatchers("/pedidos/novo").hasRole("VENDEDOR")
+                .requestMatchers(HttpMethod.POST, "/pedidos").hasRole("VENDEDOR")
                 .anyRequest().authenticated())
             .formLogin(form -> form
                 .loginPage("/login")

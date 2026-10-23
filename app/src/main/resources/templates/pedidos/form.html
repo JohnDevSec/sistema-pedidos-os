@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Novo pedido</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <script th:src="@{/js/pedido-form.js}" defer></script>
+</head>
+<body>
+  <header th:replace="~{fragments/topbar :: topbar}"></header>
+  <main class="glass content form-largo">
+    <h1>Novo pedido</h1>
+    <form th:action="@{/pedidos}" th:object="${pedido}" method="post">
+      <p class="msg erro" th:each="e : ${#fields.globalErrors()}" th:text="${e}"></p>
+
+      <label for="clienteId">Cliente</label>
+      <select th:field="*{clienteId}">
+        <option value="">Selecione um cliente</option>
+        <option th:each="c : ${clientes}" th:value="${c.id}" th:text="${c.nome} + ' (' + ${c.documento} + ')'"></option>
+      </select>
+      <small class="erro-campo" th:if="${#fields.hasErrors('clienteId')}" th:errors="*{clienteId}"></small>
+
+      <label>Itens</label>
+      <small class="erro-campo" th:if="${#fields.hasErrors('itens')}" th:errors="*{itens}"></small>
+      <table class="itens">
+        <thead>
+          <tr><th>Descrição</th><th class="col-qtd">Qtd.</th><th class="col-valor">Valor unit.</th><th class="col-acao"></th></tr>
+        </thead>
+        <tbody id="itens-corpo">
+          <tr th:each="item, st : *{itens}">
+            <td>
+              <input type="text" aria-label="Descrição" maxlength="200" th:field="*{itens[__${st.index}__].descricao}">
+              <small class="erro-campo" th:if="${#fields.hasErrors('itens[__${st.index}__].descricao')}" th:errors="*{itens[__${st.index}__].descricao}"></small>
+            </td>
+            <td>
+              <input type="number" aria-label="Quantidade" min="1" step="1" th:field="*{itens[__${st.index}__].quantidade}">
+              <small class="erro-campo" th:if="${#fields.hasErrors('itens[__${st.index}__].quantidade')}" th:errors="*{itens[__${st.index}__].quantidade}"></small>
+            </td>
+            <td>
+              <input type="number" aria-label="Valor unitário" min="0" step="0.01" th:field="*{itens[__${st.index}__].valorUnitario}">
+              <small class="erro-campo" th:if="${#fields.hasErrors('itens[__${st.index}__].valorUnitario')}" th:errors="*{itens[__${st.index}__].valorUnitario}"></small>
+            </td>
+            <td><button type="button" class="remover" aria-label="Remover item">X</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <template id="linha-modelo">
+        <tr>
+          <td><input type="text" aria-label="Descrição" maxlength="200" name="itens[__INDEX__].descricao"></td>
+          <td><input type="number" aria-label="Quantidade" min="1" step="1" name="itens[__INDEX__].quantidade" value="1"></td>
+          <td><input type="number" aria-label="Valor unitário" min="0" step="0.01" name="itens[__INDEX__].valorUnitario"></td>
+          <td><button type="button" class="remover" aria-label="Remover item">X</button></td>
+        </tr>
+      </template>
+
+      <div class="total-linha">
+        <button type="button" id="add-item">Adicionar item</button>
+        <strong>Total: <span id="total">R$ 0,00</span></strong>
+      </div>
+
+      <label for="observacao">Observação</label>
+      <textarea th:field="*{observacao}" rows="3" maxlength="2000" placeholder="Detalhes para o analista"></textarea>
+
+      <div class="actions">
+        <a class="btn btn-sec" th:href="@{/pedidos}">Cancelar</a>
+        <button type="submit">Salvar pedido</button>
+      </div>
+    </form>
+  </main>
+</body>
+</html>

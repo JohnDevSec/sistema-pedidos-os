@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pedidos</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+  <header th:replace="~{fragments/topbar :: topbar}"></header>
+  <main class="glass content">
+    <h1>Pedidos</h1>
+    <p class="msg info" th:if="${sucesso}" th:text="${sucesso}"></p>
+    <div class="toolbar">
+      <form class="busca" method="get" th:action="@{/pedidos}">
+        <select name="status" style="margin:0">
+          <option value="">Todos os status</option>
+          <option th:each="s : ${listaStatus}" th:value="${s}" th:text="${s.rotulo}" th:selected="${s == status}"></option>
+        </select>
+        <button type="submit">Filtrar</button>
+      </form>
+      <a class="btn" th:if="${ehVendedor}" th:href="@{/pedidos/novo}">Novo pedido</a>
+    </div>
+    <p class="vazio" th:if="${!pagina.hasContent()}">Nenhum pedido encontrado.</p>
+    <div class="tabela-scroll" th:if="${pagina.hasContent()}">
+      <table>
+        <thead>
+          <tr><th>Nº</th><th>Cliente</th><th>Vendedor</th><th>Status</th><th>Total</th><th>Criado em</th></tr>
+        </thead>
+        <tbody>
+          <tr th:each="p : ${pagina.content}">
+            <td th:text="'#' + ${p.id}"></td>
+            <td th:text="${p.cliente.nome}"></td>
+            <td th:text="${p.vendedor.nome}"></td>
+            <td><span class="badge" th:classappend="'st-' + ${p.status}" th:text="${p.status.rotulo}"></span></td>
+            <td th:text="'R$ ' + ${#numbers.formatDecimal(p.valorTotal, 1, 'POINT', 2, 'COMMA')}"></td>
+            <td th:text="${#temporals.format(p.dataCriacao, 'dd/MM/yyyy HH:mm')}"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="paginacao">
+      <a th:if="${pagina.hasPrevious()}" th:href="@{/pedidos(status=${status},pagina=${pagina.number - 1})}">Anterior</a>
+      <span>Página <span th:text="${pagina.number + 1}">1</span> de <span th:text="${pagina.totalPages == 0 ? 1 : pagina.totalPages}">1</span></span>
+      <a th:if="${pagina.hasNext()}" th:href="@{/pedidos(status=${status},pagina=${pagina.number + 1})}">Próxima</a>
+    </div>
+  </main>
+</body>
+</html>

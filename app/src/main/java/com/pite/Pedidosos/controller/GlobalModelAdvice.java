@@ -14,6 +14,12 @@ public class GlobalModelAdvice {
         return principal == null ? null : principal.getName();
     }
 
+    @ModelAttribute("ehVendedor")
+    public boolean ehVendedor(Authentication authentication) {
+        return authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_VENDEDOR"));
+    }
+
     @ModelAttribute("ehAdmin")
     public boolean ehAdmin(Authentication authentication) {
         return authentication != null && authentication.getAuthorities().stream()
