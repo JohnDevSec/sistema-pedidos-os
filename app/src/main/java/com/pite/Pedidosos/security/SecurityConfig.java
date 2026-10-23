@@ -25,6 +25,9 @@ public class SecurityConfig {
                 .requestMatchers("/pedidos/novo").hasRole("VENDEDOR")
                 .requestMatchers(HttpMethod.POST, "/pedidos").hasRole("VENDEDOR")
                 .requestMatchers(HttpMethod.POST, "/pedidos/*/editar", "/pedidos/*/aprovar").hasRole("ANALISTA")
+                .requestMatchers(HttpMethod.POST, "/ordens/*/avancar").hasRole("ANALISTA")
+                .requestMatchers(HttpMethod.POST, "/ordens/*/avancar").hasRole("ANALISTA")
+                .requestMatchers(HttpMethod.POST, "/ordens/*/avancar").hasRole("ANALISTA")
                 .anyRequest().authenticated())
             .formLogin(form -> form
                 .loginPage("/login")

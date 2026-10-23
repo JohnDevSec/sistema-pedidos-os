@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ordens de serviço</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+  <header th:replace="~{fragments/topbar :: topbar}"></header>
+  <main class="glass content">
+    <h1>Ordens de serviço</h1>
+    <p class="msg info" th:if="${sucesso}" th:text="${sucesso}"></p>
+    <p class="msg erro" th:if="${erro}" th:text="${erro}"></p>
+    <div class="toolbar">
+      <form class="busca" method="get" th:action="@{/ordens}">
+        <select name="status" style="margin:0">
+          <option value="">Todos os status</option>
+          <option th:each="s : ${listaStatus}" th:value="${s}" th:text="${s.rotulo}" th:selected="${s == status}"></option>
+        </select>
+        <button type="submit">Filtrar</button>
+      </form>
+    </div>
+    <p class="vazio" th:if="${!pagina.hasContent()}">Nenhuma ordem de serviço encontrada.</p>
+    <div class="tabela-scroll" th:if="${pagina.hasContent()}">
+      <table>
+        <thead>
+          <tr><th>OS</th><th>Pedido</th><th>Cliente</th><th>Analista</th><th>Status</th><th>Gerada em</th><th>Concluída em</th><th></th></tr>
+        </thead>
+        <tbody>
+          <tr th:each="o : ${pagina.content}">
+            <td th:text="'#' + ${o.id}"></td>
+            <td><a th:href="@{/pedidos/{id}(id=${o.pedido.id})}" th:text="'#' + ${o.pedido.id}"></a></td>
+            <td th:text="${o.pedido.cliente.nome}"></td>
+            <td th:text="${o.analista.nome}"></td>
+            <td><span class="badge" th:classappend="'st-' + ${o.status}" th:text="${o.status.rotulo}"></span></td>
+            <td th:text="${#temporals.format(o.dataGeracao, 'dd/MM/yyyy HH:mm')}"></td>
+            <td th:text="${o.dataConclusao != null ? #temporals.format(o.dataConclusao, 'dd/MM/yyyy HH:mm') : '-'}"></td>
+            <td>
+              <form th:if="${podeAvancar and o.status.name() != 'CONCLUIDA'}"
+                    th:action="@{/ordens/{id}/avancar(id=${o.id})}" method="post">
+                <button type="submit" th:text="${o.status.name() == 'ABERTA'} ? 'Iniciar' : 'Concluir'">Avançar</button>
+              </form>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="paginacao">
+      <a th:if="${pagina.hasPrevious()}" th:href="@{/ordens(status=${status},pagina=${pagina.number - 1})}">Anterior</a>
+      <span>Página <span th:text="${pagina.number + 1}">1</span> de <span th:text="${pagina.totalPages == 0 ? 1 : pagina.totalPages}">1</span></span>
+      <a th:if="${pagina.hasNext()}" th:href="@{/ordens(status=${status},pagina=${pagina.number + 1})}">Próxima</a>
+    </div>
+  </main>
+</body>
+</html>

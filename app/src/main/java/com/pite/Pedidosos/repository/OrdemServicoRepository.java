@@ -11,9 +11,15 @@ public interface OrdemServicoRepository extends JpaRepository<OrdemServico, Long
 
     boolean existsByPedidoId(Long pedidoId);
 
-    @EntityGraph(attributePaths = {"pedido", "analista"})
+    @EntityGraph(attributePaths = {"pedido", "pedido.cliente", "analista"})
+    Page<OrdemServico> findAll(Pageable pageable);
+
+    @EntityGraph(attributePaths = {"pedido", "pedido.cliente", "analista"})
     Page<OrdemServico> findByStatus(StatusOS status, Pageable pageable);
 
-    @EntityGraph(attributePaths = {"pedido", "analista"})
-    Page<OrdemServico> findAll(Pageable pageable);
+    @EntityGraph(attributePaths = {"pedido", "pedido.cliente", "analista"})
+    Page<OrdemServico> findByPedidoVendedorEmailIgnoreCase(String email, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"pedido", "pedido.cliente", "analista"})
+    Page<OrdemServico> findByStatusAndPedidoVendedorEmailIgnoreCase(StatusOS status, String email, Pageable pageable);
 }

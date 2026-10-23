@@ -118,3 +118,8 @@ h2 { font-size: 15px; margin: 24px 0 10px; font-weight: 600; }
 .btn-perigo { border-color: rgba(224, 122, 122, 0.5); background: rgba(224, 122, 122, 0.12); }
 .btn-perigo:hover { background: rgba(224, 122, 122, 0.22); }
 .obs { white-space: pre-wrap; color: var(--muted); font-size: 14px; margin: 0; }
+.st-ABERTA { color: var(--accent); border-color: rgba(122, 167, 209, 0.4); }
+.st-EM_ANDAMENTO { color: #d6b66a; border-color: rgba(214, 182, 106, 0.4); }
+.st-CONCLUIDA { color: #7fc79a; border-color: rgba(127, 199, 154, 0.4); }
+td form { margin: 0; }
+td form button { width: auto; padding: 6px 12px; }
