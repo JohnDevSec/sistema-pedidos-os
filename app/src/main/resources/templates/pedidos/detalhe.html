@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="'Pedido #' + ${pedidoAtual.id}">Pedido</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <script th:if="${podeEditar}" th:src="@{/js/pedido-form.js}" defer></script>
+</head>
+<body>
+  <header th:replace="~{fragments/topbar :: topbar}"></header>
+  <main class="glass content form-largo">
+    <h1 th:text="'Pedido #' + ${pedidoAtual.id}">Pedido</h1>
+    <p class="msg info" th:if="${sucesso}" th:text="${sucesso}"></p>
+    <p class="msg erro" th:if="${erro}" th:text="${erro}"></p>
+
+    <div class="info-pedido">
+      <span class="badge" th:classappend="'st-' + ${pedidoAtual.status}" th:text="${pedidoAtual.status.rotulo}"></span>
+      <span>Cliente: <span th:text="${pedidoAtual.cliente.nome}"></span></span>
+      <span>Vendedor: <span th:text="${pedidoAtual.vendedor.nome}"></span></span>
+      <span th:text="'Criado em ' + ${#temporals.format(pedidoAtual.dataCriacao, 'dd/MM/yyyy HH:mm')}"></span>
+    </div>
+
+    <form th:if="${podeEditar}" th:action="@{/pedidos/{id}/editar(id=${pedidoAtual.id})}"
+          th:object="${pedidoForm}" method="post">
+      <p class="msg erro" th:each="e : ${#fields.globalErrors()}" th:text="${e}"></p>
+      <input type="hidden" th:field="*{clienteId}">
+      <p class="dica" th:if="${pedidoAtual.status.name() == 'CRIADO'}">
+        Salve as alterações (mesmo sem mudar nada) para iniciar a revisão e liberar a aprovação.
+      </p>
+
+      <small class="erro-campo" th:if="${#fields.hasErrors('itens')}" th:errors="*{itens}"></small>
+      <table class="itens">
+        <thead>
+          <tr><th>Descrição</th><th class="col-qtd">Qtd.</th><th class="col-valor">Valor unit.</th><th class="col-acao"></th></tr>
+        </thead>
+        <tbody id="itens-corpo">
+          <tr th:each="item, st : *{itens}">
+            <td>
+              <input type="text" aria-label="Descrição" maxlength="200" th:field="*{itens[__${st.index}__].descricao}">
+              <small class="erro-campo" th:if="${#fields.hasErrors('itens[__${st.index}__].descricao')}" th:errors="*{itens[__${st.index}__].descricao}"></small>
+            </td>
+            <td>
+              <input type="number" aria-label="Quantidade" min="1" step="1" th:field="*{itens[__${st.index}__].quantidade}">
+              <small class="erro-campo" th:if="${#fields.hasErrors('itens[__${st.index}__].quantidade')}" th:errors="*{itens[__${st.index}__].quantidade}"></small>
+            </td>
+            <td>
+              <input type="number" aria-label="Valor unitário" min="0" step="0.01" th:field="*{itens[__${st.index}__].valorUnitario}">
+              <small class="erro-campo" th:if="${#fields.hasErrors('itens[__${st.index}__].valorUnitario')}" th:errors="*{itens[__${st.index}__].valorUnitario}"></small>
+            </td>
+            <td><button type="button" class="remover" aria-label="Remover item">X</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <template id="linha-modelo">
+        <tr>
+          <td><input type="text" aria-label="Descrição" maxlength="200" name="itens[__INDEX__].descricao"></td>
+          <td><input type="number" aria-label="Quantidade" min="1" step="1" name="itens[__INDEX__].quantidade" value="1"></td>
+          <td><input type="number" aria-label="Valor unitário" min="0" step="0.01" name="itens[__INDEX__].valorUnitario"></td>
+          <td><button type="button" class="remover" aria-label="Remover item">X</button></td>
+        </tr>
+      </template>
+      <div class="total-linha">
+        <button type="button" id="add-item">Adicionar item</button>
+        <strong>Total: <span id="total">R$ 0,00</span></strong>
+      </div>
+
+      <label for="observacao">Observação</label>
+      <textarea th:field="*{observacao}" rows="3" maxlength="2000"></textarea>
+      <div class="actions">
+        <button type="submit">Salvar alterações</button>
+      </div>
+    </form>
+
+    <div th:unless="${podeEditar}">
+      <div class="tabela-scroll">
+        <table>
+          <thead>
+            <tr><th>Descrição</th><th>Qtd.</th><th>Valor unit.</th></tr>
+          </thead>
+          <tbody>
+            <tr th:each="i : ${pedidoAtual.itens}">
+              <td th:text="${i.descricao}"></td>
+              <td th:text="${i.quantidade}"></td>
+              <td th:text="'R$ ' + ${#numbers.formatDecimal(i.valorUnitario, 1, 'POINT', 2, 'COMMA')}"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong th:text="'Total: R$ ' + ${#numbers.formatDecimal(pedidoAtual.valorTotal, 1, 'POINT', 2, 'COMMA')}"></strong></p>
+      <p class="obs" th:if="${pedidoAtual.observacao != null and !#strings.isEmpty(pedidoAtual.observacao)}"
+         th:text="${pedidoAtual.observacao}"></p>
+    </div>
+
+    <div class="acoes-pedido">
+      <a class="btn btn-sec" th:href="@{/pedidos}">Voltar</a>
+      <form th:if="${podeCancelar}" th:action="@{/pedidos/{id}/cancelar(id=${pedidoAtual.id})}" method="post"
+            onsubmit="return confirm('Cancelar este pedido?')">
+        <button type="submit" class="btn-perigo">Cancelar pedido</button>
+      </form>
+      <form th:if="${podeAprovar}" th:action="@{/pedidos/{id}/aprovar(id=${pedidoAtual.id})}" method="post">
+        <button type="submit">Aprovar e gerar OS</button>
+      </form>
+    </div>
+
+    <h2>Histórico de alterações</h2>
+    <p class="vazio" th:if="${historico.isEmpty()}">Nenhuma alteração registrada.</p>
+    <div class="tabela-scroll" th:unless="${historico.isEmpty()}">
+      <table>
+        <thead>
+          <tr><th>Quando</th><th>Quem</th><th>Campo</th><th>De</th><th>Para</th></tr>
+        </thead>
+        <tbody>
+          <tr th:each="h : ${historico}">
+            <td th:text="${#temporals.format(h.dataHora, 'dd/MM/yyyy HH:mm')}"></td>
+            <td th:text="${h.usuario.nome}"></td>
+            <td th:text="${h.campo}"></td>
+            <td th:text="${h.valorAnterior} ?: '-'"></td>
+            <td th:text="${h.valorNovo} ?: '-'"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</body>
+</html>

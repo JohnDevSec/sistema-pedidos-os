@@ -110,3 +110,11 @@ textarea:focus { outline: none; border-color: var(--accent); }
 .itens .erro-campo { margin: 2px 0 0; }
 .remover, #add-item { width: auto; background: transparent; border: 1px solid var(--border); }
 .total-linha { display: flex; justify-content: space-between; align-items: center; margin: 12px 0 18px; }
+h2 { font-size: 15px; margin: 24px 0 10px; font-weight: 600; }
+.info-pedido { display: flex; gap: 18px; flex-wrap: wrap; color: var(--muted); font-size: 13px; margin-bottom: 16px; align-items: center; }
+.acoes-pedido { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; justify-content: flex-end; }
+.acoes-pedido form { margin: 0; }
+.acoes-pedido button { width: auto; }
+.btn-perigo { border-color: rgba(224, 122, 122, 0.5); background: rgba(224, 122, 122, 0.12); }
+.btn-perigo:hover { background: rgba(224, 122, 122, 0.22); }
+.obs { white-space: pre-wrap; color: var(--muted); font-size: 14px; margin: 0; }

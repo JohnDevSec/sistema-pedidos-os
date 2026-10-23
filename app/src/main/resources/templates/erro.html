@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Não encontrado</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+  <header th:replace="~{fragments/topbar :: topbar}"></header>
+  <main class="glass content form-card">
+    <h1>Ops</h1>
+    <p th:text="${mensagem}">Algo deu errado.</p>
+    <a class="btn btn-sec" th:href="@{/}">Voltar ao início</a>
+  </main>
+</body>
+</html>

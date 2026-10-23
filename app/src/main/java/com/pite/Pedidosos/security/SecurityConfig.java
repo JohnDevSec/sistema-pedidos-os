@@ -24,6 +24,7 @@ public class SecurityConfig {
                 .requestMatchers("/usuarios/**").hasRole("ADMIN")
                 .requestMatchers("/pedidos/novo").hasRole("VENDEDOR")
                 .requestMatchers(HttpMethod.POST, "/pedidos").hasRole("VENDEDOR")
+                .requestMatchers(HttpMethod.POST, "/pedidos/*/editar", "/pedidos/*/aprovar").hasRole("ANALISTA")
                 .anyRequest().authenticated())
             .formLogin(form -> form
                 .loginPage("/login")

@@ -25,7 +25,7 @@
     <div class="tabela-scroll" th:if="${pagina.hasContent()}">
       <table>
         <thead>
-          <tr><th>Nº</th><th>Cliente</th><th>Vendedor</th><th>Status</th><th>Total</th><th>Criado em</th></tr>
+          <tr><th>Nº</th><th>Cliente</th><th>Vendedor</th><th>Status</th><th>Total</th><th>Criado em</th><th></th></tr>
         </thead>
         <tbody>
           <tr th:each="p : ${pagina.content}">
@@ -35,6 +35,7 @@
             <td><span class="badge" th:classappend="'st-' + ${p.status}" th:text="${p.status.rotulo}"></span></td>
             <td th:text="'R$ ' + ${#numbers.formatDecimal(p.valorTotal, 1, 'POINT', 2, 'COMMA')}"></td>
             <td th:text="${#temporals.format(p.dataCriacao, 'dd/MM/yyyy HH:mm')}"></td>
+            <td><a th:href="@{/pedidos/{id}(id=${p.id})}">Abrir</a></td>
           </tr>
         </tbody>
       </table>

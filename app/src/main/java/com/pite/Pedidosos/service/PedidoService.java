@@ -128,6 +128,41 @@ public class PedidoService {
         return criar(clienteId, vendedor.getId(), observacao, itens);
     }
 
+    @Transactional(readOnly = true)
+    public Pedido buscarVisivel(Long id, String email, boolean somenteProprios) {
+        Pedido pedido = buscar(id);
+        if (somenteProprios && !pedido.getVendedor().getEmail().equalsIgnoreCase(email)) {
+            throw new RegraDeNegocioException("Pedido não encontrado.");
+        }
+        return pedido;
+    }
+
+    @Transactional(readOnly = true)
+    public List<HistoricoAlteracao> historicoDe(Long pedidoId) {
+        return historico.findByPedidoIdOrderByDataHoraDesc(pedidoId);
+    }
+
+    @Transactional
+    public Pedido editarComoAnalista(String email, Long pedidoId, String observacao, List<ItemPedido> itens) {
+        return editar(pedidoId, idDoUsuario(email), observacao, itens);
+    }
+
+    @Transactional
+    public OrdemServico aprovarComoAnalista(String email, Long pedidoId) {
+        return aprovar(pedidoId, idDoUsuario(email));
+    }
+
+    @Transactional
+    public Pedido cancelarComo(String email, Long pedidoId) {
+        return cancelar(pedidoId, idDoUsuario(email));
+    }
+
+    private Long idDoUsuario(String email) {
+        return usuarios.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new RegraDeNegocioException("Usuário não encontrado."))
+                .getId();
+    }
+
     private void exigirItens(List<ItemPedido> itens) {
         if (itens == null || itens.isEmpty()) {
             throw new RegraDeNegocioException("O pedido precisa ter pelo menos um item.");
